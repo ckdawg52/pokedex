@@ -13,6 +13,15 @@ func main() {
 		scanner.Scan()
 		text := scanner.Text()
 		cleaned := cleanInput(text)
-		fmt.Print("Your command was: " + cleaned[0])
+		for _, cleaned := range cleaned {
+			switch cleaned {
+			case "exit":
+				commandExit()
+			case "help":
+				commandHelp()
+			default:
+				fmt.Println("Unknown command")
+			}
+		}
 	}
 }
