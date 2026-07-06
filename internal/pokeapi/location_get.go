@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// GetLocation -
 func (c *Client) GetLocation(locationName string) (Location, error) {
 	url := baseURL + "/location-area/" + locationName
 
@@ -18,7 +19,7 @@ func (c *Client) GetLocation(locationName string) (Location, error) {
 		return locationResp, nil
 	}
 
-	req, err := http.NewRequest("Get", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return Location{}, err
 	}
@@ -27,20 +28,20 @@ func (c *Client) GetLocation(locationName string) (Location, error) {
 	if err != nil {
 		return Location{}, err
 	}
+	defer resp.Body.Close()
 
 	dat, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return Location{}, nil
+		return Location{}, err
 	}
 
 	locationResp := Location{}
 	err = json.Unmarshal(dat, &locationResp)
 	if err != nil {
-		return Location{}, nil
+		return Location{}, err
 	}
 
 	c.cache.Add(url, dat)
 
 	return locationResp, nil
-
 }
